@@ -2,6 +2,7 @@ import Card from '../helpers/card';
 import Zone from '../helpers/zone';
 import Player from '../helpers/player';
 import PlayArea from '../helpers/playarea';
+import Deck from '../helpers/deck';
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -27,6 +28,11 @@ export default class Game extends Phaser.Scene {
 
     this.playArea = new PlayArea(this);
     this.areaOutline = this.playArea.renderArea(worldWidth - 700, 50);
+
+    this.newDeck = new Deck(this);
+    this.deck = this.newDeck.getDeck();
+    //this.shuffledDeck = this.newDeck.shuffle(this.deck);
+    this.cardIcons = this.newDeck.renderDeck(this.deck);
 
 
     this.dealCards = () => {
