@@ -1,6 +1,7 @@
 import Card from '../helpers/card';
 import Zone from '../helpers/zone';
 import Player from '../helpers/player';
+import PlayArea from '../helpers/playarea';
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -21,8 +22,12 @@ export default class Game extends Phaser.Scene {
 
     let self = this;
     const worldHeight = this.cameras.main.height;
-    const worldWeidth = this.cameras.main.width;
-    console.log('world size', worldWeidth, worldHeight)
+    const worldWidth = this.cameras.main.width;
+    console.log('world size', worldWidth, worldHeight)
+
+    this.playArea = new PlayArea(this);
+    this.areaOutline = this.playArea.renderArea(worldWidth - 700, 50);
+
 
     this.dealCards = () => {
       for (let i = 0; i < 13; i++) {
@@ -77,12 +82,10 @@ export default class Game extends Phaser.Scene {
     this.makePlayers = () => {
       for (let i = 0; i < allPlayers.length; i++) {
         let player = new Player(this);
-        // playerCard.render(150 + (i * 60), 650, 'cyanCardFront');
         player.renderPlayer(90, 60 + (i * 60), allPlayers[i]);
-
       }
     }
-    self.makePlayers();
+    self.makePlayers();//call function above
 
   }
 
