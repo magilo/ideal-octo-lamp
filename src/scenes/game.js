@@ -19,31 +19,67 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
-
-    let self = this;
     const worldHeight = this.cameras.main.height;
     const worldWidth = this.cameras.main.width;
-    console.log('world size', worldWidth, worldHeight)
+    // console.log('world size', worldWidth, worldHeight)
+    let self = this;
+    const allPlayers = ["Jessie", "James", "Meowth", "You"]
+
+    this.makePlayers = () => {
+      for (let i = 0; i < allPlayers.length; i++) {
+        let player = new Player(this);
+        player.renderPlayer(90, 60 + (i * 60), allPlayers[i]);
+      }
+    }
+    self.makePlayers();//call function above
+
+    this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
+
+
+
 
     this.playArea = new PlayArea(this);
     this.areaOutline = this.playArea.renderArea(worldWidth - 700, 50);
 
     this.newDeck = new Deck(this);
     this.deck = this.newDeck.getDeck();
-    //this.shuffledDeck = this.newDeck.shuffle(this.deck);
-    this.cardIcons = this.newDeck.renderDeck(this.deck);
+    this.newDeck.shuffle(this.deck);
+    // console.log(this.deck)
+    //this.newDeck.renderCard(5, 650, this.deck[0]);
+
+
 
 
     this.dealCards = () => {
-      for (let i = 0; i < 13; i++) {
-        let playerCard = new Card(this);
-        playerCard.render(150 + (i * 60), 650, 'cyanCardFront');
+      for (let i = 0; i < this.deck.length; i += 13) {
+        let section = this.deck.slice(i, i + 13);
+        let playerIdx = i / 13;
+        this.data.set(allPlayers[playerIdx], section);
+
+        //let playerCard = new Card(this);
+        //playerCard.render(150 + (i * 20), 650, 'cyanCardFront');
+      }
+
+    }
+
+    this.renderHand = () => {
+      //console.log('this', this.data.get('You'))
+      let yourHand = this.data.get('You')
+      let playerCard = new Card(this);
+      let counter = 0
+      for (let i = 0; i < yourHand.length; i++) {
+        console.log(counter)
+        counter++
+        //this.newDeck.renderCard(100 + (i * 100), 600, yourHand[i]);
+        playerCard.renderCard(50 + (i * 90), 600, yourHand[i]);
       }
     }
 
+
     this.dealText.on('pointerdown', function () {
       self.dealCards();
+      self.renderHand();
+
     })
 
     this.dealText.on('pointerover', function () {
@@ -83,19 +119,8 @@ export default class Game extends Phaser.Scene {
     this.dropZone = this.zone.renderZone();
     this.outline = this.zone.renderOutline(this.dropZone);
 
-    const allPlayers = ["Jessie", "James", "Meowth", "You"]
-
-    this.makePlayers = () => {
-      for (let i = 0; i < allPlayers.length; i++) {
-        let player = new Player(this);
-        player.renderPlayer(90, 60 + (i * 60), allPlayers[i]);
-      }
-    }
-    self.makePlayers();//call function above
-
   }
 
   update() {
-
   }
 }

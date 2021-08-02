@@ -1,7 +1,7 @@
 export default class Deck {
   constructor(scene) {
-    const suits = ["spades", "diamonds", "clubs", "hearts"];
-    const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    //const suits = ["spades", "diamonds", "clubs", "hearts"];
+    //const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const suitsUnicode = {
       spades: 'A',
       diamonds: 'C',
@@ -26,14 +26,29 @@ export default class Deck {
 
     this.getDeck = () => {
       const deck = new Array();
-      for (let s = 0; s < suits.length; s++) {
-        for (let v = 0; v < values.length; v++) {
-          const card = { value: values[v], suit: suits[s] };
+      for (const s in suitsUnicode) {
+        for (const v in valuesUnicode) {
+          const card = {
+            value: v,
+            suit: s,
+            unicode: '0x1F0' + suitsUnicode[s] + valuesUnicode[v]
+          }
           deck.push(card);
         }
       }
       return deck
     }
+
+    // this.getDeck = () => {
+    //   const deck = new Array();
+    //   for (let s = 0; s < suits.length; s++) {
+    //     for (let v = 0; v < values.length; v++) {
+    //       const card = { value: values[v], suit: suits[s] };
+    //       deck.push(card);
+    //     }
+    //   }
+    //   return deck
+    // }
 
     this.shuffle = (deck) => {
       // for 1000 turns
@@ -49,13 +64,14 @@ export default class Deck {
       return deck;
     }
 
-    // A = ace;
-    // B = hearts;
-    // C = Diamonds
-    // D= clubs
+    // this.renderCard = (x, y, card) => {
+    //   let color;
+    //   console.log(card)
+    //   let unicode = card.unicode;
 
-    // 1-9 is the numbers;
-    // A-E is 10 to king
+    //   let cardIcon = scene.add.text(x, y, [String.fromCodePoint(unicode)]).setFontSize(140).setFontFamily('Arial').setColor('#00ffef').setInteractive();
+    //   scene.input.setDraggable(cardIcon);
+    // }
 
     this.renderDeck = (deck) => {
       let base = '0x1F0'
@@ -80,12 +96,3 @@ export default class Deck {
   }
 }
 
-// export default class Card {
-//   constructor(scene) {
-//     this.render = (x, y, sprite) => {
-//       let card = scene.add.image(x, y, sprite).setScale(0.2, 0.2).setInteractive();
-//       scene.input.setDraggable(card);
-//       return card;
-//     }
-//   }
-// }
