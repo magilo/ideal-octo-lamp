@@ -69,17 +69,19 @@ export default class Game extends Phaser.Scene {
     this.renderHand = () => {
       let yourHand = this.data.get('You')
       let playerCard = new Card(this);
-      let counter = 0
       for (let i = 0; i < yourHand.length; i++) {
 
         //this.newDeck.renderCard(100 + (i * 100), 600, yourHand[i]);
         let card = playerCard.renderCard(50 + (i * 90), 600, yourHand[i]);
         card.on('pointerdown', function () {
-
-
-
-          card.setColor('#ffa812');
-          console.log(card)
+          if (card.state === 0) {
+            card.setColor('#ffa812');
+            card.state = 1;
+          }
+          else {
+            card.setColor('#00ffef');
+            card.state = 0;
+          }
         });
       }
     }
