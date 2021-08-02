@@ -13,6 +13,8 @@ export default class Card {
 
       let cardIcon = scene.add.text(x, y, [String.fromCodePoint(unicode)]).setFontSize(140).setFontFamily('Arial').setColor('#00ffef').setInteractive();
       scene.input.setDraggable(cardIcon);
+      
+
       return cardIcon
     }
   }

@@ -24,11 +24,14 @@ export default class Game extends Phaser.Scene {
     // console.log('world size', worldWidth, worldHeight)
     let self = this;
     const allPlayers = ["Jessie", "James", "Meowth", "You"]
+    const playerData = {};
+
+    this.player = new Player(this);
 
     this.makePlayers = () => {
       for (let i = 0; i < allPlayers.length; i++) {
-        let player = new Player(this);
-        player.renderPlayer(90, 60 + (i * 60), allPlayers[i]);
+        let playerText = this.player.renderPlayer(90, 60 + (i * 60), allPlayers[i]);
+        playerData[allPlayers[i]] = playerText;
       }
     }
     self.makePlayers();//call function above
@@ -55,6 +58,7 @@ export default class Game extends Phaser.Scene {
         let section = this.deck.slice(i, i + 13);
         let playerIdx = i / 13;
         this.data.set(allPlayers[playerIdx], section);
+        this.player.updateHand(this.data);
 
         //let playerCard = new Card(this);
         //playerCard.render(150 + (i * 20), 650, 'cyanCardFront');
@@ -63,15 +67,22 @@ export default class Game extends Phaser.Scene {
     }
 
     this.renderHand = () => {
-      //console.log('this', this.data.get('You'))
       let yourHand = this.data.get('You')
       let playerCard = new Card(this);
-      let counter = 0
       for (let i = 0; i < yourHand.length; i++) {
-        console.log(counter)
-        counter++
+
         //this.newDeck.renderCard(100 + (i * 100), 600, yourHand[i]);
-        playerCard.renderCard(50 + (i * 90), 600, yourHand[i]);
+        let card = playerCard.renderCard(50 + (i * 90), 600, yourHand[i]);
+        card.on('pointerdown', function () {
+          if (card.state === 0) {
+            card.setColor('#ffa812');
+            card.state = 1;
+          }
+          else {
+            card.setColor('#00ffef');
+            card.state = 0;
+          }
+        });
       }
     }
 
@@ -95,29 +106,33 @@ export default class Game extends Phaser.Scene {
       gameObject.y = dragY;
     })
 
-    this.input.on('dragstart', function (pointer, gameObject) {
-      gameObject.setTint(0xff69b4);
-      self.children.bringToTop(gameObject);
-    })
 
-    this.input.on('dragend', function (pointer, gameObject, dropped) {
-      gameObject.setTint();
-      if (!dropped) {
-        gameObject.x = gameObject.input.dragStartX;
-        gameObject.y = gameObject.input.dragStartY;
-      }
-    })
 
-    this.input.on('drop', function (pointer, gameObject, dropZone) {
-      dropZone.data.values.cards++;
-      gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
-      gameObject.y = dropZone.y;
-      gameObject.disableInteractive();
-    })
 
-    this.zone = new Zone(this);
-    this.dropZone = this.zone.renderZone();
-    this.outline = this.zone.renderOutline(this.dropZone);
+
+    // this.input.on('dragstart', function (pointer, gameObject) {
+    //   gameObject.setTint(0xff69b4);
+    //   self.children.bringToTop(gameObject);
+    // })
+
+    // this.input.on('dragend', function (pointer, gameObject, dropped) {
+    //   gameObject.setTint();
+    //   if (!dropped) {
+    //     gameObject.x = gameObject.input.dragStartX;
+    //     gameObject.y = gameObject.input.dragStartY;
+    //   }
+    // })
+
+    // this.input.on('drop', function (pointer, gameObject, dropZone) {
+    //   dropZone.data.values.cards++;
+    //   gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
+    //   gameObject.y = dropZone.y;
+    //   gameObject.disableInteractive();
+    // })
+
+    // this.zone = new Zone(this);
+    // this.dropZone = this.zone.renderZone();
+    // this.outline = this.zone.renderOutline(this.dropZone);
 
   }
 
